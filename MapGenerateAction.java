@@ -60,40 +60,52 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
     public void setConcept_map(ConceptMapData concept_map) {
         this.concept_map = concept_map;
     }
-    @Override
-    public void validate() {
+    //@Override
+    public String my_validate() {
         if (StringUtils.isEmpty(getConcept_map().getUploadedFileFileName())){
             addFieldError("uploadedFile", "*Uploaded File Cannot be blank.");
+            return INPUT;
+        }
+        if(! StringUtils.isEmpty(getConcept_map().getUploadedFileContentType()) && StringUtils.equalsIgnoreCase(getConcept_map().getUploadedFileContentType(), "txt")){
+            addFieldError("uploadedFile", "*Only Text Files allowed");
+            return INPUT;
         }
         if (StringUtils.isEmpty(getConcept_map().getChapter_name())) {
             //super.addActionError("Chapter Name Cannot be blank");
             addFieldError("chapter_name", "*Chapter Name Cannot be blank.");
+            return INPUT;
         }
         if (StringUtils.isEmpty(getConcept_map().getChapter_number())) {
             //super.addActionError("Chapter Number Cannot be blank");
             addFieldError("chapter_number", "*Chapter Number Cannot be blank.");
+            return INPUT;
         }
         if (StringUtils.isEmpty(getConcept_map().getSection_number())) {
             //super.addActionError("Section Number Cannot be blank");
             addFieldError("section_number", "*Section Number Cannot be blank.");
+            return INPUT;
         }
         if (StringUtils.isEmpty(getConcept_map().getSection_name())) {
             //super.addActionError("Section Name Cannot be blank");
             addFieldError("section_name", "*Section Name Cannot be blank.");
+            return INPUT;
         }
+        return "";
     }
 
 
     @Override
     public String execute() {
-
+        String tempt = my_validate();
+        if(StringUtils.equals(tempt, INPUT))
+            return INPUT;
         String file_path = "/home/chanakya/NetBeansProjects/Concepto/UploadedFiles";
         try {
             File fileToCreate = new File(file_path, concept_map.getUploadedFileFileName());
             FileUtils.copyFile(concept_map.getUploadedFile(), fileToCreate);
         } catch (Throwable t) {
             System.out.println("E1: " + t.getMessage());
-            return ERROR;
+            //return ERROR;
         }
         try {
             List<String> temp_text = FileUtils.readLines(concept_map.getUploadedFile());
@@ -105,7 +117,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
         } catch (IOException e) {
             //e.printStackTrace();
             System.out.println("E2: " + e.getMessage());
-            return ERROR;
+            //return ERROR;
         }
         String temp_filename = concept_map.getUploadedFileFileName().split("\\.(?=[^\\.]+$)")[0];
         temp_filename = temp_filename.trim();
@@ -135,7 +147,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             }
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException | IOException e) {
             System.out.println("E3: " + e.getMessage());
-            return ERROR;
+            //return ERROR;
         }
 
         try {
@@ -157,7 +169,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             mainMethod.invoke(mainClass, new Object[]{args});
         } catch (InvocationTargetException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException | IOException e) {
             System.out.println("E4: " + e.getMessage());
-            return ERROR;
+            //return ERROR;
         }
 
         String cmd = "python /home/chanakya/NetBeansProjects/Concepto/src/java/generate/add_to_graph.py \"/home/chanakya/NetBeansProjects/Concepto/UploadedFiles/" + temp_filename + "_OllieOutput.txt\"";
@@ -176,7 +188,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             System.out.println("Process exitValue2: " + exitVal);
         } catch (Throwable t) {
             System.out.println("E5: " + t.getMessage());
-            return ERROR;
+            //return ERROR;
         }
 
         cmd = "python /home/chanakya/NetBeansProjects/Concepto/src/java/generate/json_correct.py";
@@ -195,7 +207,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             System.out.println("Process exitValue3: " + exitVal);
         } catch (Throwable t) {
             System.out.println("E6: " + t.getMessage());
-            return ERROR;
+            //return ERROR;
         }
 
         try {
@@ -207,7 +219,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             concept_map.setOutput_text(text_1.toString());
         } catch (IOException e) {
             System.out.println("E7: " + e.getMessage());
-            return ERROR;
+            //return ERROR;
         }
         Random rand = new Random();
         int unique_id = rand.nextInt(99999999);
@@ -228,13 +240,14 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             //collection.save(document);
         } catch (MongoException e) {
             System.out.println("E8: " + e.getMessage());
-            return ERROR;
+            //return ERROR;
         } catch (UnknownHostException ex) {
             Logger.getLogger(MapGenerateAction.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("E9");
-            return ERROR;
+            //return ERROR;
         }
         System.out.println("Out DB");
+        System.out.println(SUCCESS);
         return SUCCESS;
     }
 
