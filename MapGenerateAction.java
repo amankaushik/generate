@@ -62,34 +62,43 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
     }
     //@Override
     public String my_validate() {
+        int flag = 0;
         if (StringUtils.isEmpty(getConcept_map().getUploadedFileFileName())){
             addFieldError("uploadedFile", "*Uploaded File Cannot be blank.");
-            return INPUT;
+            flag = 1;
+            //return INPUT;
         }
         if(! StringUtils.isEmpty(getConcept_map().getUploadedFileContentType()) && StringUtils.equalsIgnoreCase(getConcept_map().getUploadedFileContentType(), "txt")){
             addFieldError("uploadedFile", "*Only Text Files allowed");
-            return INPUT;
+            flag = 1;
+            //return INPUT;
         }
         if (StringUtils.isEmpty(getConcept_map().getChapter_name())) {
             //super.addActionError("Chapter Name Cannot be blank");
             addFieldError("chapter_name", "*Chapter Name Cannot be blank.");
-            return INPUT;
+            flag = 1;
+            //return INPUT;
         }
         if (StringUtils.isEmpty(getConcept_map().getChapter_number())) {
             //super.addActionError("Chapter Number Cannot be blank");
             addFieldError("chapter_number", "*Chapter Number Cannot be blank.");
-            return INPUT;
+            flag = 1;
+            //return INPUT;
         }
         if (StringUtils.isEmpty(getConcept_map().getSection_number())) {
             //super.addActionError("Section Number Cannot be blank");
             addFieldError("section_number", "*Section Number Cannot be blank.");
-            return INPUT;
+            flag = 1;
+            //return INPUT;
         }
         if (StringUtils.isEmpty(getConcept_map().getSection_name())) {
             //super.addActionError("Section Name Cannot be blank");
             addFieldError("section_name", "*Section Name Cannot be blank.");
-            return INPUT;
+            flag = 1;
+            //return INPUT;
         }
+        if(flag == 1)
+            return INPUT;
         return "";
     }
 
