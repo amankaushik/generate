@@ -64,9 +64,9 @@ public class ShowChapterMapAction {
         } catch (UnknownHostException ex) {
             Logger.getLogger(MapGenerateAction.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("DB Output: " + document.get("OutputText").toString());
+        //System.out.println("DB Output: " + document.get("OutputText").toString());
         //setData(document.get("OutputText").toString());
-        setData(document.get("ChapterName").toString().toLowerCase());
+        setData(document.get("ChapterName").toString());
         try {
             MongoClient mongo = new MongoClient();
             DB db = mongo.getDB("Major");
@@ -116,6 +116,7 @@ public class ShowChapterMapAction {
             System.out.println("E5: " + t.getMessage());
             //return ERROR;
         }
+        
         return SUCCESS;
     }
 }

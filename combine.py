@@ -7,38 +7,30 @@ f = open('nodes.txt', 'w')
 f.close()
 f1 = open('relations.txt', 'w')
 f1.close()
-vol = ['python', 'add_to_graph.py', '', '', '', '']
-vol[4] = sys.argv[1]
-vol[5] = sys.argv[2]
-vol[2] = 'Chapter2/one.txt'
+sections = []
+vol = ['python', 'add_to_graph_combine.py', '', '', '3', '3']
+directory = "/home/chanakya/NetBeansProjects/Concepto/UploadedFiles/"
+with open(sys.argv[1]) as fp:
+    for line in fp:
+        sections.append(line)
+
+vol[2] = directory + sections[0].strip('\n') + '_OllieOutput.txt'
+#print 'VOL 2:', vol[2], ''
 vol[3] = '2'
+#print 'VOL: ', vol, ''
 p = subprocess.Popen(vol, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 out, err = p.communicate()
-vol[2] = 'Chapter2/two.txt'
-vol[3] = str(int(out))
-p = subprocess.Popen(vol, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-out, err = p.communicate()
-print int(out)
-vol[2] = 'Chapter2/three.txt'
-vol[3] = str(int(out))
-p = subprocess.Popen(vol, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-out, err = p.communicate()
-print int(out)
-vol[2] = 'Chapter2/four.txt'
-vol[3] = str(int(out))
-p = subprocess.Popen(vol, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-out, err = p.communicate()
-print int(out)
-vol[2] = 'Chapter2/five.txt'
-vol[3] = str(int(out))
-p = subprocess.Popen(vol, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-out, err = p.communicate()
-print int(out)
-vol[2] = 'Chapter2/six.txt'
-vol[3] = str(int(out))
-p = subprocess.Popen(vol, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-out, err = p.communicate()
-print int(out)
+#print 'OUT: ', out
+sections = sections[1:]
+
+for section in sections:
+  vol[2] = directory + section.strip('\n') + '_OllieOutput.txt'
+  #print 'VOL 2:', vol[2], ''
+  vol[3] = str(int(out.strip()))
+  #print 'VOL 3: ', vol, ''
+  p = subprocess.Popen(vol, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  out, err = p.communicate()
+
 with open('nodes.txt', 'rb+') as filehandle:
     filehandle.seek(-2, os.SEEK_END)
     filehandle.truncate()
@@ -48,19 +40,19 @@ with open('relations.txt', 'rb+') as filehandle:
     filehandle.truncate()
 
 orig_stdout = sys.stdout
-f2 = open("new_graph.json", "w")
+f2 = open("/home/chanakya/NetBeansProjects/Concepto/web/new_chap_graph.json", "w")
 sys.stdout = f2
 
 print """{
-	"graph": [],
-	"links": [ """
+  "graph": [],
+  "links": [ """
 
 f4 = open('relations.txt', 'r')
 print f4.read()
 
 print "],"
 print ''' "nodes": [ 
-	{"id": "Book", "type": "circle"},'''
+  {"id": "Book", "type": "circle"},'''
 
 f5 = open('nodes.txt', 'r')
 print f5.read()
@@ -70,4 +62,3 @@ print '''],
   "multigraph": false
 }'''
 f2.close()
-webbrowser.open('story.html')
