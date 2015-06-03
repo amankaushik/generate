@@ -24,28 +24,35 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.Random;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.struts2.dispatcher.SessionMap;
+import org.apache.struts2.interceptor.SessionAware;
 
 /**
  *
  * @author chanakya
  */
-public class MapGenerateAction extends ActionSupport implements ModelDriven<ConceptMapData>, Serializable {
+public class MapGenerateAction extends ActionSupport implements ModelDriven<ConceptMapData>, Serializable, SessionAware {
 //,ServletRequestAware 
 // Model -> ConceptMapData
 
     private ConceptMapData concept_map = new ConceptMapData();
+    private Map<String,Object> session = null;
     @Override
     public ConceptMapData getModel() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         return concept_map;
     }
-
+     @Override
+    public void setSession(Map<String, Object> map) {
+        this.session = session;
+    }
     public static com.opensymphony.xwork2.util.logging.Logger getLOG() {
         return LOG;
     }
@@ -233,6 +240,8 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
         }
         Random rand = new Random();
         int unique_id = rand.nextInt(99999999);
+        
+        session.put("uid", Integer.toString(unique_id));
         System.out.println("Going In DB");
         try {
             MongoClient mongo = new MongoClient();
@@ -260,5 +269,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
         System.out.println(SUCCESS);
         return SUCCESS;
     }
+
+   
 
 }
