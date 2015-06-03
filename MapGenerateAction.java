@@ -222,7 +222,11 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             System.out.println("E4: " + e.getMessage());
             //return ERROR;
         }
-            
+        
+        File graph_file = new File("/home/chanakya/NetBeansProjects/Concepto/web/new_graph.json"); 
+        if(graph_file.exists())
+            graph_file.delete();
+        
         String cmd = "python /home/chanakya/NetBeansProjects/Concepto/src/java/generate/add_to_graph.py \"/home/chanakya/NetBeansProjects/Concepto/UploadedFiles/" + temp_filename + "_OllieOutput.txt\"";
         String[] finalCommand;
         finalCommand = new String[3];

@@ -14,6 +14,7 @@ import com.mongodb.MongoException;
 import static com.opensymphony.xwork2.Action.ERROR;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import com.opensymphony.xwork2.ActionSupport;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
@@ -65,6 +66,9 @@ public class ShowConceptMapAction extends ActionSupport implements Serializable{
         }
         System.out.println("DB Output: " + document.get("OutputText").toString());
         setData(document.get("OutputText").toString());
+        File graph_file = new File("/home/chanakya/NetBeansProjects/Concepto/web/new_graph.json"); 
+        if(graph_file.exists())
+            graph_file.delete();
         try {
  
 		FileWriter file = new FileWriter("/home/chanakya/NetBeansProjects/Concepto/web/new_graph.json");
