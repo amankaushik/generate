@@ -18,6 +18,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -34,7 +35,7 @@ import java.util.logging.Logger;
  *
  * @author chanakya
  */
-public class MapGenerateAction extends ActionSupport implements ModelDriven<ConceptMapData> {
+public class MapGenerateAction extends ActionSupport implements ModelDriven<ConceptMapData>, Serializable {
 //,ServletRequestAware 
 // Model -> ConceptMapData
 
