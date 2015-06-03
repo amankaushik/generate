@@ -1,0 +1,15 @@
+plants of kind	be cultivated at	one place
+plants of kind	be cultivated on	large scale
+kind	is called	crop
+crop of wheat	means for	example
+all the plants	be grown in	field
+all the plants grown in a field	are that of	wheat
+crops	are of	different types
+India	is	vast country
+climatic conditions	vary from	one region
+crops	be grown in	different parts of India
+different	be parts of	India
+two broad cropping patterns	can be identified despite	this diversity
+crops	are called	crops
+crops	be grown in	winter season
+wheat , gram , pea , mustard and linseed	be Examples of	Crops

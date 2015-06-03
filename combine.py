@@ -8,7 +8,7 @@ f.close()
 f1 = open('relations.txt', 'w')
 f1.close()
 sections = []
-vol = ['python', 'add_to_graph_combine.py', '', '', '3', '3']
+vol = ['python', '/home/chanakya/NetBeansProjects/Concepto/src/java/generate/add_to_graph_combine.py', '', '', '3', '3']
 directory = "/home/chanakya/NetBeansProjects/Concepto/UploadedFiles/"
 with open(sys.argv[1]) as fp:
     for line in fp:
@@ -17,7 +17,7 @@ with open(sys.argv[1]) as fp:
 vol[2] = directory + sections[0].strip('\n') + '_OllieOutput.txt'
 #print 'VOL 2:', vol[2], ''
 vol[3] = '2'
-#print 'VOL: ', vol, ''
+print 'VOL: ', vol, ''
 p = subprocess.Popen(vol, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 out, err = p.communicate()
 #print 'OUT: ', out
@@ -28,6 +28,7 @@ for section in sections:
   #print 'VOL 2:', vol[2], ''
   vol[3] = str(int(out.strip()))
   #print 'VOL 3: ', vol, ''
+  print 'VOL: ', vol, ''
   p = subprocess.Popen(vol, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   out, err = p.communicate()
 
