@@ -38,23 +38,35 @@ import org.apache.struts2.interceptor.SessionAware;
  *
  * @author chanakya
  */
-public class MapGenerateAction extends ActionSupport implements ModelDriven<ConceptMapData>, Serializable, SessionAware {
+public class MapGenerateAction extends ActionSupport implements ModelDriven<ConceptMapData>, Serializable {
 //,ServletRequestAware 
 // Model -> ConceptMapData
 
     private ConceptMapData concept_map = new ConceptMapData();
-    private Map<String,Object> session = null;
+    //private Map<String,Object> session = null;
+    private int unique_id;
+    private String uid;
     @Override
     public ConceptMapData getModel() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         return concept_map;
     }
-     @Override
+    /*
+    @Override
     public void setSession(Map<String, Object> map) {
         this.session = session;
     }
+    */
     public static com.opensymphony.xwork2.util.logging.Logger getLOG() {
         return LOG;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public static void setLOG(com.opensymphony.xwork2.util.logging.Logger LOG) {
@@ -239,9 +251,10 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             //return ERROR;
         }
         Random rand = new Random();
-        int unique_id = rand.nextInt(99999999);
         
-        session.put("uid", Integer.toString(unique_id));
+        setUnique_id(rand.nextInt(99999999));
+        setUid(Integer.toString(getUnique_id()));
+        //session.put("uid", Integer.toString(unique_id));
         System.out.println("Going In DB");
         try {
             MongoClient mongo = new MongoClient();
@@ -254,7 +267,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             document.append("ChapterNumber", concept_map.getChapter_number());
             document.append("SectionName", concept_map.getSection_name());
             document.append("SectionNumber", concept_map.getSection_number());
-            document.append("UniqueID", Integer.toString(unique_id));
+            document.append("UniqueID", Integer.toString(getUnique_id()));
             collection.insert(document);
             //collection.save(document);
         } catch (MongoException e) {
@@ -268,6 +281,14 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
         System.out.println("Out DB");
         System.out.println(SUCCESS);
         return SUCCESS;
+    }
+
+    public int getUnique_id() {
+        return unique_id;
+    }
+
+    public void setUnique_id(int unique_id) {
+        this.unique_id = unique_id;
     }
 
    
