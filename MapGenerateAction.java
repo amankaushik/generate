@@ -18,21 +18,25 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.UnknownHostException;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Random;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.struts2.dispatcher.SessionMap;
-import org.apache.struts2.interceptor.SessionAware;
 
 /**
  *
@@ -124,7 +128,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
 
 
     @Override
-    public String execute() {
+    public String execute() throws IOException {
         String tempt = my_validate();
         if(StringUtils.equals(tempt, INPUT))
             return INPUT;
@@ -140,7 +144,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             List<String> temp_text = FileUtils.readLines(concept_map.getUploadedFile());
             StringBuilder text = new StringBuilder();
             for (String s : temp_text) {
-                text.append(s);
+                text.append(s.toLowerCase());
             }
             concept_map.setInput_text(text.toString());
         } catch (IOException e) {
@@ -176,9 +180,27 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             }
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException | IOException e) {
             System.out.println("E3: " + e.getMessage());
-            //return ERROR;
         }
-
+        
+        String src = "/home/chanakya/NCERT/ParsedOutputs/" +  temp_filename + "_ParseOutput.txt";
+        String dest = "/home/chanakya/NetBeansProjects/Concepto/UploadedFiles/" +  temp_filename + "_ParseOutput.txt";
+        
+        BufferedWriter writer = null;
+        File file1 = new File(dest);
+        //File file2 = new File(dest);
+        List<String> temp_text = FileUtils.readLines(file1);
+        //StringBuilder text = new StringBuilder();
+        writer = new BufferedWriter(new FileWriter(file1));
+        for (String s : temp_text) {
+            writer.write(s.toLowerCase());
+            writer.newLine();
+        }
+        writer.close();
+        /*
+        Path path_src = Paths.get(src);
+        Path path_dest = Paths.get(dest);
+        Files.copy(path_src, path_dest, StandardCopyOption.REPLACE_EXISTING);
+        */
         try {
             String temp2 = "java -jar /home/chanakya/NetBeansProjects/Concepto/src/java/generate/MajorCoreII.jar " + file_path + " " + temp_filename;
             System.out.println(temp2);
@@ -200,7 +222,7 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             System.out.println("E4: " + e.getMessage());
             //return ERROR;
         }
-
+            
         String cmd = "python /home/chanakya/NetBeansProjects/Concepto/src/java/generate/add_to_graph.py \"/home/chanakya/NetBeansProjects/Concepto/UploadedFiles/" + temp_filename + "_OllieOutput.txt\"";
         String[] finalCommand;
         finalCommand = new String[3];
@@ -209,15 +231,11 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
         finalCommand[2] = cmd;
         System.out.println("CMD: " + cmd);
         try {
-            //ProcessBuilder builder = new ProcessBuilder(finalCommand);
-            //builder.redirectErrorStream(true);
-            //Process process = builder.start();
             Process process = Runtime.getRuntime().exec(finalCommand);
             int exitVal = process.waitFor();
             System.out.println("Process exitValue2: " + exitVal);
         } catch (Throwable t) {
             System.out.println("E5: " + t.getMessage());
-            //return ERROR;
         }
 
         cmd = "python /home/chanakya/NetBeansProjects/Concepto/src/java/generate/json_correct.py";
@@ -227,16 +245,12 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
         finalCommand[2] = cmd;
 
         try {
-            //Process process = Runtime.getRuntime().exec(finalCommand);
-
             ProcessBuilder builder = new ProcessBuilder(finalCommand);
-            // builder.redirectErrorStream(true);
             Process process = builder.start();
             int exitVal = process.waitFor();
             System.out.println("Process exitValue3: " + exitVal);
         } catch (Throwable t) {
             System.out.println("E6: " + t.getMessage());
-            //return ERROR;
         }
 
         try {
@@ -248,13 +262,11 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             concept_map.setOutput_text(text_1.toString());
         } catch (IOException e) {
             System.out.println("E7: " + e.getMessage());
-            //return ERROR;
         }
         Random rand = new Random();
         
         setUnique_id(rand.nextInt(99999999));
         setUid(Integer.toString(getUnique_id()));
-        //session.put("uid", Integer.toString(unique_id));
         System.out.println("Going In DB");
         try {
             MongoClient mongo = new MongoClient();
@@ -269,14 +281,11 @@ public class MapGenerateAction extends ActionSupport implements ModelDriven<Conc
             document.append("SectionNumber", concept_map.getSection_number());
             document.append("UniqueID", Integer.toString(getUnique_id()));
             collection.insert(document);
-            //collection.save(document);
         } catch (MongoException e) {
             System.out.println("E8: " + e.getMessage());
-            //return ERROR;
         } catch (UnknownHostException ex) {
             Logger.getLogger(MapGenerateAction.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("E9");
-            //return ERROR;
         }
         System.out.println("Out DB");
         System.out.println(SUCCESS);

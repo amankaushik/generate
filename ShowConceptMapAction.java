@@ -16,6 +16,7 @@ import static com.opensymphony.xwork2.Action.SUCCESS;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -25,7 +26,7 @@ import java.util.logging.Logger;
  *
  * @author chanakya
  */
-public class ShowConceptMapAction extends ActionSupport{
+public class ShowConceptMapAction extends ActionSupport implements Serializable{
     private String idd;
     
     public String getIdd() {

@@ -19,6 +19,7 @@ import static com.opensymphony.xwork2.Action.ERROR;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class ShowArticlesAction extends ActionSupport {
+public class ShowArticlesAction extends ActionSupport implements Serializable {
     public String execute() throws ClassNotFoundException, SQLException, IOException {
         List<DBObject> documents = new ArrayList<>();
         System.out.println("Mark 0");

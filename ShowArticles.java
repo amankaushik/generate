@@ -7,6 +7,7 @@ package generate;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author chanakya
  */
-public class ShowArticles extends HttpServlet {
+public class ShowArticles extends HttpServlet implements Serializable {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

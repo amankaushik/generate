@@ -16,6 +16,7 @@ import static com.opensymphony.xwork2.Action.ERROR;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author chanakya
  */
-public class ShowChapterMapAction {
+public class ShowChapterMapAction implements Serializable {
 
     private String idd;
 
