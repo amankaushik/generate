@@ -40,7 +40,24 @@ public class ShowConceptMapAction extends ActionSupport implements Serializable{
     
     
     String data;
+    String cname;
 
+    public String getCname() {
+        return cname;
+    }
+
+    public void setCname(String cname) {
+        this.cname = cname;
+    }
+
+    public String getSname() {
+        return sname;
+    }
+
+    public void setSname(String sname) {
+        this.sname = sname;
+    }
+    String sname;
     public String getData() {
         return data;
     }
@@ -66,6 +83,8 @@ public class ShowConceptMapAction extends ActionSupport implements Serializable{
         }
         System.out.println("DB Output: " + document.get("OutputText").toString());
         setData(document.get("OutputText").toString());
+        setCname(document.get("ChapterName").toString());
+        setSname(document.get("SectionName").toString());
         File graph_file = new File("/home/chanakya/NetBeansProjects/Concepto/web/new_graph.json"); 
         if(graph_file.exists())
             graph_file.delete();
